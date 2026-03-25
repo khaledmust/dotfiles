@@ -1,0 +1,14 @@
+[general]
+import = ["~/.config/alacritty/themes/one_dark.toml"]
+
+[window]
+decorations = "Full"
+startup_mode = "Windowed"
+
+[font]
+normal = {family = "JetBrains Mono", style = "Regular"}
+bold = {family = "JetBrains Mono", style = "Bold"}
+italic = {family = "JetBrains Mono", style = "Italic"}
+
+[cursor]
+style = {shape = "Block", blinking = "On"}

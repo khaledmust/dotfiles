@@ -1,0 +1,6 @@
+[general]
+import = ["~/.config/alacritty/themes/one_dark.toml"]
+
+[window]
+decorations = "None"
+startup_mode = "Windowed"
