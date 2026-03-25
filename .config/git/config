@@ -1,0 +1,40 @@
+[user]
+    name = Khaled Mustafa
+    email = 29418521+khaledmust@users.noreply.github.com
+
+[core]
+    # Set your preferred editor (nano, vim, code --wait)
+    editor = emacs
+    # Handles line endings (standard for Windows; use 'input' for Mac/Linux)
+    autocrlf = true
+    # Prevents "filename too long" errors on Windows
+    longpaths = true
+
+[init]
+    # Use 'main' instead of the legacy 'master' for new repos
+    defaultBranch = main
+
+[alias]
+    # Shortcuts for common commands
+    st = status
+    co = checkout
+    br = branch
+    cm = commit -m
+    # A beautiful, one-line log visualization
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+[color]
+    # Enable colors in the terminal for better readability
+    ui = auto
+
+[pull]
+    # Keeps your history clean by avoiding unnecessary merge commits during pulls
+    rebase = true
+
+[push]
+    # Automatically sets the upstream branch on your first push
+    autoSetupRemote = true
+
+[diff]
+    # Highlights word-level changes rather than just whole lines
+    wordDiff = true
