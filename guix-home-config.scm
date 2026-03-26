@@ -155,6 +155,19 @@ gtk-application-prefer-dark-theme=true
   (simple-service 'add-custom-paths home-environment-variables-service-type
                   `(("PATH" . "~/.config/emacs/bin:$PATH"))))
 
+(define my-nix-packages
+  (simple-service 'install-nix-packages
+                  home-activation-service-type
+                  #~(begin
+                      ;; Optionally update your Nix channels automatically
+                      (system* "nix-channel" "--update")
+                      
+                      ;; Install your desired packages from Nix
+                      (system* "nix-env" "-iA" 
+                               "nixpkgs.hello" 
+                               "nixpkgs.bat"
+                               "nixpkgs.ripgrep"))))
+
 (define home-config
   (home-environment
     (packages (append (list (first (lookup-inferior-packages my-inferior
@@ -196,11 +209,13 @@ gtk-application-prefer-dark-theme=true
                             (home-bash-configuration
                              (environment-variables '(("PS1" . "\\[\\e[1;32m\\]\\u \\[\\e[1;34m\\]\\w \\[\\e[0m\\]λ ")
                                                       ("EDITOR" . "emacsclient")))
+                             
                              (aliases '(("gs" . "git status")
                                         ("ll" . "ls -alF")
-                                        ("upgrade" . "guix home reconfigure /home/khaled/dotfiles/guix-home-config.scm")
-                                        ("update" . "guix pull")
-                                        ("sysupgrade" . "sudo guix system reconfigure /etc/config.scm")
+                                        ("ghr" . "guix home reconfigure -L ~/dotfiles/modules ~/dotfiles/guix-home-config.scm")
+                                        ("gup" . "guix pull")
+                                        ("gsr" . "sudo guix system reconfigure /etc/config.scm")
+                                        ("gcl" . "guix home delete-generations && guix package --delete-generations")
                                         ("format" . "guix style -f")))))
                    
                    (service home-files-service-type
