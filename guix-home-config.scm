@@ -13,7 +13,9 @@
   #:use-module (gnu packages glib) ;Provides gsettings command.
   #:use-module (guix inferior)
   #:use-module (guix channels)
-  #:use-module (srfi srfi-1))
+  #:use-module (srfi srfi-1)
+  #:use-module (caffeine)
+  #:use-module (quake-terminal))
 
 (define firefox-channel
   (list (channel
@@ -113,6 +115,10 @@ gtk-application-prefer-dark-theme=true
                                                 "picture-uri-dark"
                                                 (string-append "file://"
                                                                #$my-wallpaper))
+                                               (invoke gsettings "set"
+                                                "org.gnome.desktop.interface"
+                                                "font-name"
+                                                "'IBM Plex Sans 11'")
 
                                                (invoke gsettings "set"
                                                 "org.gnome.settings-daemon.plugins.media-keys"
@@ -156,16 +162,13 @@ gtk-application-prefer-dark-theme=true
                   `(("PATH" . "~/.config/emacs/bin:$PATH"))))
 
 (define my-nix-packages
-  (simple-service 'install-nix-packages
-                  home-activation-service-type
+  (simple-service 'install-nix-packages home-activation-service-type
                   #~(begin
                       ;; Optionally update your Nix channels automatically
                       (system* "nix-channel" "--update")
-                      
+
                       ;; Install your desired packages from Nix
-                      (system* "nix-env" "-iA" 
-                               "nixpkgs.hello" 
-                               "nixpkgs.bat"
+                      (system* "nix-env" "-iA" "nixpkgs.hello" "nixpkgs.bat"
                                "nixpkgs.ripgrep"))))
 
 (define home-config
@@ -174,32 +177,35 @@ gtk-application-prefer-dark-theme=true
                                                              "firefox")))
 
                       (specifications->packages (list "alacritty"
-                                                      "bibata-cursor-theme"
-                                                      "bitwarden-desktop"
-                                                      "emacs"
-                                                      "git"
-                                                      "fd"
-                                                      "flatpak"
-                                                      "font-iosevka"
-                                                      "font-jetbrains-mono"
-                                                      "font-vazirmatn"
-                                                      "gcc-toolchain"
-                                                      "geany"
-                                                      "gnome-shell-extension-gsconnect"
-                                                      "gnome-shell-extension-clipboard-indicator"
-                                                      "icedove"
-                                                      "kicad"
-                                                      "kicad-templates"
-                                                      "kicad-symbols"
-                                                      "kicad-packages3d"
-                                                      "kicad-footprints"
-                                                      "kicad-doc"
-                                                      "lshw"
-                                                      "ripgrep"
-                                                      "vscodium"))))
+                                                 "bibata-cursor-theme"
+                                                 "bitwarden-desktop"
+                                                 "emacs"
+                                                 "git"
+                                                 "fd"
+                                                 "flatpak"
+                                                 "font-ibm-plex"
+                                                 "font-iosevka"
+                                                 "font-jetbrains-mono"
+                                                 "font-vazirmatn"
+                                                 "gcc-toolchain"
+                                                 "geany"
+                                                 "gnome-shell-extension-gsconnect"
+                                                 "gnome-shell-extension-clipboard-indicator"
+                                                 "gnome-shell-extension-caffeine"
+                                                 "gnome-shell-extension-quake-terminal"
+                                                 ;; "icedove"
+                                                 "kicad"
+                                                 "kicad-templates"
+                                                 "kicad-symbols"
+                                                 "kicad-packages3d"
+                                                 "kicad-footprints"
+                                                 "kicad-doc"
+                                                 "lshw"
+                                                 "ripgrep"
+                                                 "vscodium"))))
     (services
-     (append (list ; my-flatpak-services
-                   ; my-flatpak-directory
+     (append (list ;my-flatpak-services
+                   ;; my-flatpak-directory
                    my-gnome-activation
                    my-variables
                    gtk3-settings-service
@@ -209,7 +215,7 @@ gtk-application-prefer-dark-theme=true
                             (home-bash-configuration
                              (environment-variables '(("PS1" . "\\[\\e[1;32m\\]\\u \\[\\e[1;34m\\]\\w \\[\\e[0m\\]λ ")
                                                       ("EDITOR" . "emacsclient")))
-                             
+
                              (aliases '(("gs" . "git status")
                                         ("ll" . "ls -alF")
                                         ("ghr" . "guix home reconfigure -L ~/dotfiles/modules ~/dotfiles/guix-home-config.scm")
@@ -217,7 +223,7 @@ gtk-application-prefer-dark-theme=true
                                         ("gsr" . "sudo guix system reconfigure /etc/config.scm")
                                         ("gcl" . "guix home delete-generations && guix package --delete-generations")
                                         ("format" . "guix style -f")))))
-                   
+
                    (service home-files-service-type
                             `((".guile" ,%default-dotguile)
                               (".Xdefaults" ,%default-xdefaults)))
